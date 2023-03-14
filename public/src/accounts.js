@@ -4,18 +4,20 @@ const authors = require ("../data/authors")
 
 function findAccountById(accounts , id) {
 
-  return result = accounts.find(accountObj => accountObj.id === id)
+  let result = accounts.find(accountObj => accountObj.id === id)
+  return result
  }
 
-//console.log(findAccountById(accounts,"5f446f2ecfaf0310387c9603"))
+
 
 function sortAccountsByLastName(accounts) {
 
-    return accounts.sort((accountOne, accountTwo) => (
+    let result = accounts.sort((accountOne, accountTwo) => (
     accountOne.name.last.toLowerCase() > accountTwo.name.last.toLowerCase() ? 1 : -1 ))
-      }
+  return result    
+  }
 
-//console.log(sortAccountsByLastName(accounts))
+
 
 function getTotalNumberOfBorrows(accounts, books) {
 
@@ -30,28 +32,29 @@ function getTotalNumberOfBorrows(accounts, books) {
   return total
 }
 
-//console.log(getTotalNumberOfBorrows(accounts, books))
 
-function getBooksPossessedByAccount(accounts, books, authors) {
 
-  let result = []
-  const {borrows} = books
-
-  borrows.forEach((item) => {
-
-    let accountObj = accounts.find(acc => acc.id === item.id)
-    let account = accountObj
-    account[`returned`] = item.returned
-    result.push(account)
-    
+function getBooksPossessedByAccount(account, books, authors) {
+  
+  let booksPossessed=[];
+  
+  books.forEach(book => {
+    let borrowArray = book.borrows;
+    if (borrowArray.find(borrow => borrow.id === account.id && borrow.returned === false)) {
+      booksPossessed.push(book);
+    }
   })
-
-  console.log(result);
-  return result.slice(0,10);
+  
+  booksPossessed.forEach(book=>{
+    let author = authors.find(person => person.id === book.authorId);
+    book['author'] = author;
+  })
+  return booksPossessed;
   
 }
 
-//console.log(getBooksPossessedByAccount(account, books, authors)
+
+
 
  module.exports = {
   findAccountById,
